@@ -9,9 +9,6 @@ import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import { schema } from "../blocks/schema";
 import { SCRIPT_TEMPLATE } from "../blocks/template";
-// EditorTopBar will be created in Task 11
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error — EditorTopBar not yet created (Task 11)
 import { EditorTopBar } from "./EditorTopBar";
 import { Loader2 } from "lucide-react";
 
