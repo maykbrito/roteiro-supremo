@@ -7,7 +7,9 @@ import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { BlockNoteEditor } from "@blocknote/core";
+import { en as coreDict } from "@blocknote/core/locales";
 import { AIExtension, AIMenu, ClientSideTransport } from "@blocknote/xl-ai";
+import { pt as aiDictionaryPt } from "@blocknote/xl-ai/locales";
 import { AnimatePresence } from "motion/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -51,7 +53,7 @@ export function Editor({ scriptId }: EditorProps) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (api as any).prosemirrorSync,
     scriptId as string,
-    { editorOptions: { schema, extensions: [aiExtension] } },
+    { editorOptions: { schema, extensions: [aiExtension], dictionary: { ...coreDict, ai: aiDictionaryPt } as any } },
   );
 
   const [analysis, setAnalysis] = useState<any>(null);
