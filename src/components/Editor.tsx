@@ -1,15 +1,17 @@
 // src/components/Editor.tsx
-import { useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useBlockNoteSync } from "@convex-dev/prosemirror-sync/blocknote";
 import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { BlockNoteEditor } from "@blocknote/core";
+import { AnimatePresence } from "motion/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import { schema } from "../blocks/schema";
 import { SCRIPT_TEMPLATE } from "../blocks/template";
 import { EditorTopBar } from "./EditorTopBar";
+import { AIAnalysisPanel } from "./AIAnalysisPanel";
 import { Loader2 } from "lucide-react";
 
 interface EditorProps {
@@ -23,6 +25,8 @@ export function Editor({ scriptId }: EditorProps) {
     scriptId as string,
     { editorOptions: { schema } },
   );
+
+  const [analysis, setAnalysis] = useState<any>(null);
 
   // Handle template initialization for new documents
   const handleCreate = useCallback(() => {
@@ -73,7 +77,7 @@ export function Editor({ scriptId }: EditorProps) {
       }
     };
 
-    // onChange returns an Unsubscribe function (onEditorContentChange is deprecated and returns void)
+    // onChange returns an Unsubscribe function
     const unsubscribe = sync.editor.onChange(applyCollapse);
     applyCollapse();
 
@@ -105,10 +109,22 @@ export function Editor({ scriptId }: EditorProps) {
 
   return (
     <div className="min-h-screen bg-zinc-950">
-      <EditorTopBar scriptId={scriptId} editor={sync.editor} />
+      <EditorTopBar
+        scriptId={scriptId}
+        editor={sync.editor}
+        onAnalysisComplete={setAnalysis}
+      />
       <div className="max-w-3xl mx-auto px-4 py-8">
         <BlockNoteView editor={sync.editor} theme="dark" />
       </div>
+      <AnimatePresence>
+        {analysis && (
+          <AIAnalysisPanel
+            analysis={analysis}
+            onClose={() => setAnalysis(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

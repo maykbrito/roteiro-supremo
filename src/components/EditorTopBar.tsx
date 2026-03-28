@@ -1,23 +1,31 @@
 // src/components/EditorTopBar.tsx
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles, Loader2 } from "lucide-react";
 import type { BlockNoteEditor } from "@blocknote/core";
 
 interface EditorTopBarProps {
   scriptId: Id<"scripts">;
   editor: BlockNoteEditor<any, any, any>;
+  onAnalysisComplete: (analysis: any) => void;
 }
 
-export function EditorTopBar({ scriptId, editor }: EditorTopBarProps) {
+export function EditorTopBar({
+  scriptId,
+  editor,
+  onAnalysisComplete,
+}: EditorTopBarProps) {
   const [, setLocation] = useLocation();
   const script = useQuery(api.scripts.getScript, { id: scriptId });
   const updateTitle = useMutation(api.scripts.updateScriptTitle);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const analyzeAction = useAction((api as any).ai.analyzeScript);
 
   const [title, setTitle] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const titleTimeout = useRef<ReturnType<typeof setTimeout>>();
 
   // Sync title from server
@@ -33,6 +41,37 @@ export function EditorTopBar({ scriptId, editor }: EditorTopBarProps) {
     titleTimeout.current = setTimeout(() => {
       updateTitle({ id: scriptId, title: newTitle });
     }, 500);
+  };
+
+  const handleAnalyze = async () => {
+    if (isAnalyzing) return;
+    setIsAnalyzing(true);
+    try {
+      // Serialize document to text
+      const blocks = editor.document;
+      let content = "";
+      for (const block of blocks) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const blockProps = (block as any).props as Record<string, unknown>;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const blockType = (block as any).type as string;
+        if (blockType === "moduleHeader") {
+          content += `\n## Modulo ${blockProps.moduleNumber}: ${blockProps.moduleTitle}\n`;
+        } else if (blockType === "scriptField") {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const text = (((block as any).content as any[]) ?? [])
+            .map((c: any) => c.text ?? "")
+            .join("");
+          content += `**${blockProps.label}:** ${text || "(vazio)"}\n`;
+        }
+      }
+      const result = await analyzeAction({ scriptContent: content });
+      onAnalysisComplete(result);
+    } catch (error) {
+      console.error("Analysis failed:", error);
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   return (
@@ -57,14 +96,16 @@ export function EditorTopBar({ scriptId, editor }: EditorTopBarProps) {
 
         <button
           type="button"
-          onClick={() => {
-            // Full document analysis — implemented in Chunk 3
-            console.log("Analisar com IA clicked");
-          }}
-          className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-lime-400 border border-lime-500/30 rounded-lg hover:bg-lime-500/10 transition-colors"
+          onClick={handleAnalyze}
+          disabled={isAnalyzing}
+          className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-lime-400 border border-lime-500/30 rounded-lg hover:bg-lime-500/10 transition-colors disabled:opacity-50"
         >
-          <Sparkles size={14} />
-          <span>Analisar com IA</span>
+          {isAnalyzing ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            <Sparkles size={14} />
+          )}
+          <span>{isAnalyzing ? "Analisando..." : "Analisar com IA"}</span>
         </button>
       </div>
     </header>
