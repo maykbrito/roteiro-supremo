@@ -1,22 +1,16 @@
+// convex/schema.ts
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { authTables } from "@convex-dev/auth/server";
 
 export default defineSchema({
+  ...authTables,
+
   scripts: defineTable({
+    userId: v.id("users"),
     title: v.string(),
-    thumbIdea: v.string(),
-    objective: v.string(),
-    difficulties: v.string(),
-    discovery: v.string(),
-    objections: v.string(),
-    name: v.string(),
-    whoYouAre: v.string(),
-    whatYouDo: v.string(),
-    connectionStrategy: v.string(),
-    parts: v.array(v.string()),
-    transition: v.string(),
-    cta: v.array(v.string()),
-    recommendedVideo: v.string(),
     updatedAt: v.number(),
-  }).index("by_updatedAt", ["updatedAt"]),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_and_updated", ["userId", "updatedAt"]),
 });
