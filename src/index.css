@@ -16,19 +16,44 @@ body {
   --bn-colors-menu-background: #18181b;
   --bn-colors-menu-text: #f4f4f5;
   --bn-colors-hovered-background: #27272a;
-  --bn-colors-selected-background: color-mix(in srgb, var(--accent) 20%, transparent);
+  --bn-colors-selected-background: color-mix(
+    in srgb,
+    var(--accent) 20%,
+    transparent
+  );
   --bn-colors-tooltip-background: #27272a;
   --bn-colors-tooltip-text: #f4f4f5;
 }
 
-/* Remove default block margins for tighter layout */
+/* Ensure all blocks stretch to full editor width */
 .bn-container .bn-block-outer {
   margin: 0;
+}
+
+.bn-container .bn-block {
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+/* react-renderer is injected by tiptap between .bn-block and .bn-block-content for React blocks */
+.bn-container .bn-block > .react-renderer {
+  width: 100% !important;
+}
+
+.bn-container .bn-block-content {
+  width: 100% !important;
+  flex-grow: 1;
+  display: block;
+  padding: 0 !important;
 }
 
 /* Module header styling */
 .module-header {
   border-bottom: 1px solid #27272a;
+}
+
+/* Add spacing before module headers via the block-outer wrapper */
+.bn-block-outer:has([data-content-type="moduleHeader"]) {
   margin-top: 1rem;
 }
 
@@ -36,4 +61,16 @@ body {
 .script-field .inline-content [data-placeholder]::before {
   color: #52525b;
   font-style: italic;
+}
+
+/* Override blue selection outline with subtle lime */
+.bn-block-content.ProseMirror-selectednode > *,
+.ProseMirror-selectednode > .bn-block-content > * {
+  outline: 1px solid rgba(132, 204, 22, 0.4) !important;
+  border-radius: 4px;
+}
+
+/* Scale down side menu buttons (add + drag handle) */
+.bn-side-menu {
+  transform: scale(0.7);
 }

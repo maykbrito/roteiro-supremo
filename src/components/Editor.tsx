@@ -1,15 +1,10 @@
 // src/components/Editor.tsx
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useBlockNoteSync } from "@convex-dev/prosemirror-sync/blocknote";
-import { useAuthToken } from "@convex-dev/auth/react";
-import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { BlockNoteEditor } from "@blocknote/core";
-import { en as coreDict } from "@blocknote/core/locales";
-import { AIExtension, AIMenu, ClientSideTransport } from "@blocknote/xl-ai";
-import { pt as aiDictionaryPt } from "@blocknote/xl-ai/locales";
 import { AnimatePresence } from "motion/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -24,36 +19,11 @@ interface EditorProps {
 }
 
 export function Editor({ scriptId }: EditorProps) {
-  const token = useAuthToken();
-
-  const convexSiteUrl = (import.meta.env.VITE_CONVEX_URL as string).replace(
-    ".cloud",
-    ".site",
-  );
-
-  const aiModel = useMemo(
-    () =>
-      createOpenAICompatible({
-        name: "convex-gemini",
-        baseURL: `${convexSiteUrl}/api/ai/blocknote`,
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      })("gemini-3-flash-preview"),
-    [convexSiteUrl, token], // eslint-disable-line react-hooks/exhaustive-deps
-  );
-
-  const aiExtension = useMemo(
-    () =>
-      AIExtension({
-        transport: new ClientSideTransport({ model: aiModel }),
-      }),
-    [aiModel],
-  );
-
   const sync = useBlockNoteSync<BlockNoteEditor>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (api as any).prosemirrorSync,
     scriptId as string,
-    { editorOptions: { schema, extensions: [aiExtension], dictionary: { ...coreDict, ai: aiDictionaryPt } as any } },
+    { editorOptions: { schema } },
   );
 
   const [analysis, setAnalysis] = useState<any>(null);
@@ -80,10 +50,7 @@ export function Editor({ scriptId }: EditorProps) {
       const collapsedModules = new Set<string>();
 
       for (const block of blocks) {
-        if (
-          block.type === "moduleHeader" &&
-          block.props?.collapsed === true
-        ) {
+        if (block.type === "moduleHeader" && block.props?.collapsed === true) {
           collapsedModules.add(block.props.moduleId as string);
         }
       }
@@ -99,9 +66,7 @@ export function Editor({ scriptId }: EditorProps) {
         fields.forEach((el) => {
           const parent = el.closest("[data-node-type]") ?? el.parentElement;
           if (parent instanceof HTMLElement) {
-            parent.style.display = collapsedModules.has(moduleId)
-              ? "none"
-              : "";
+            parent.style.display = collapsedModules.has(moduleId) ? "none" : "";
           }
         });
       }
@@ -125,7 +90,7 @@ export function Editor({ scriptId }: EditorProps) {
   if (!sync.editor) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-zinc-950 gap-4">
-        <p className="text-zinc-400">Documento nao encontrado.</p>
+        <p className="text-zinc-400">Documento não encontrado.</p>
         <button
           type="button"
           onClick={handleCreate}
@@ -144,10 +109,8 @@ export function Editor({ scriptId }: EditorProps) {
         editor={sync.editor}
         onAnalysisComplete={setAnalysis}
       />
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <BlockNoteView editor={sync.editor} theme="dark">
-          <AIMenu />
-        </BlockNoteView>
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <BlockNoteView editor={sync.editor} theme="dark" />
       </div>
       <AnimatePresence>
         {analysis && (

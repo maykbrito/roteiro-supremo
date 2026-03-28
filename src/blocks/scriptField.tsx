@@ -111,13 +111,15 @@ export const scriptField = createReactBlockSpec(
 
       return (
         <div
-          className={`script-field module-field-${moduleId} py-2`}
+          className={`script-field module-field-${moduleId} py-2 w-full`}
           data-module-id={moduleId}
+          style={{ width: '100%' }}
         >
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center mb-1" style={{ width: '100%' }}>
             <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
               {label}
             </label>
+            <div className="flex-1" />
             <button
               onClick={(e) => {
                 e.stopPropagation();

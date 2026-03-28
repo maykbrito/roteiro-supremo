@@ -78,7 +78,7 @@ export function EditorTopBar({
 
   return (
     <header className="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-800">
-      <div className="max-w-3xl mx-auto px-4 h-14 flex items-center gap-4">
+      <div className="max-w-4xl mx-auto px-4 h-14 flex items-center gap-4">
         <button
           type="button"
           onClick={() => setLocation("/")}
@@ -93,7 +93,9 @@ export function EditorTopBar({
           type="text"
           value={title}
           onChange={(e) => handleTitleChange(e.target.value)}
-          onFocus={() => { isFocused.current = true; }}
+          onFocus={() => {
+            isFocused.current = true;
+          }}
           onBlur={() => {
             isFocused.current = false;
             // Sync server value on blur in case it changed

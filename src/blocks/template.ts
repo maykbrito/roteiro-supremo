@@ -17,14 +17,14 @@ export const SCRIPT_TEMPLATE: Block[] = [
       moduleNumber: "0",
       moduleTitle: "A Vitrine",
       microLearning:
-        "O titulo e a thumbnail sao responsaveis por 80% dos cliques. Pense neles como a vitrine da sua loja.",
+        "O título e a thumbnail são responsáveis por 80% dos cliques. Pense neles como a vitrine da sua loja.",
     },
   },
   {
     type: "scriptField",
     props: {
-      label: "Titulo do Video",
-      placeholder: "Clique para digitar o titulo...",
+      label: "Título do Vídeo",
+      placeholder: "Clique para digitar o título...",
       moduleId: "0",
     },
   },
@@ -45,14 +45,14 @@ export const SCRIPT_TEMPLATE: Block[] = [
       moduleNumber: "1",
       moduleTitle: "30 Segundos Cruciais",
       microLearning:
-        "Os primeiros 30 segundos decidem se o espectador fica ou sai. Use o gancho ODA: Objetivo, Dificuldade, Ancora.",
+        "Os primeiros 30 segundos decidem se o espectador fica ou sai. Use o gancho ODA: Objetivo, Dificuldade, Âncora.",
     },
   },
   {
     type: "scriptField",
     props: {
-      label: "Objetivo do Video",
-      placeholder: "Qual e o objetivo principal deste video?",
+      label: "Objetivo do Vídeo",
+      placeholder: "Qual é o objetivo principal deste vídeo?",
       moduleId: "1",
     },
   },
@@ -68,15 +68,15 @@ export const SCRIPT_TEMPLATE: Block[] = [
     type: "scriptField",
     props: {
       label: "Descoberta",
-      placeholder: "Qual e a descoberta ou insight principal?",
+      placeholder: "Qual é a descoberta ou insight principal?",
       moduleId: "1",
     },
   },
   {
     type: "scriptField",
     props: {
-      label: "Objecoes",
-      placeholder: "Quais objecoes o espectador pode ter?",
+      label: "Objeções",
+      placeholder: "Quais objeções o espectador pode ter?",
       moduleId: "1",
     },
   },
@@ -87,16 +87,16 @@ export const SCRIPT_TEMPLATE: Block[] = [
     props: {
       moduleId: "2-3",
       moduleNumber: "2-3",
-      moduleTitle: "Quem e Voce?",
+      moduleTitle: "Quem é Você?",
       microLearning:
-        "O espectador precisa confiar em voce antes de absorver o conteudo. Mostre quem voce e de forma autentica.",
+        "O espectador precisa confiar em você antes de absorver o conteúdo. Mostre quem você é de forma autêntica.",
     },
   },
   {
     type: "scriptField",
     props: {
-      label: "Apresentacao",
-      placeholder: "Como voce se apresenta?",
+      label: "Apresentação",
+      placeholder: "Como você se apresenta?",
       moduleId: "2-3",
     },
   },
@@ -104,15 +104,15 @@ export const SCRIPT_TEMPLATE: Block[] = [
     type: "scriptField",
     props: {
       label: "Credenciais",
-      placeholder: "Quais sao suas credenciais ou experiencia?",
+      placeholder: "Quais são suas credenciais ou experiência?",
       moduleId: "2-3",
     },
   },
   {
     type: "scriptField",
     props: {
-      label: "Estrategia de Conexao",
-      placeholder: "Como voce conecta com o espectador?",
+      label: "Estratégia de Conexão",
+      placeholder: "Como você conecta com o espectador?",
       moduleId: "2-3",
     },
   },
@@ -125,14 +125,14 @@ export const SCRIPT_TEMPLATE: Block[] = [
       moduleNumber: "4",
       moduleTitle: "O Recheio",
       microLearning:
-        "Use a Regra de 3: divida o conteudo em 3 partes claras. Isso facilita a compreensao e retencao.",
+        "Use a Regra de 3: divida o conteúdo em 3 partes claras. Isso facilita a compreensão e retenção.",
     },
   },
   {
     type: "scriptField",
     props: {
       label: "Parte 1",
-      placeholder: "Primeiro ponto principal do conteudo...",
+      placeholder: "Primeiro ponto principal do conteúdo...",
       moduleId: "4",
     },
   },
@@ -140,7 +140,7 @@ export const SCRIPT_TEMPLATE: Block[] = [
     type: "scriptField",
     props: {
       label: "Parte 2",
-      placeholder: "Segundo ponto principal do conteudo...",
+      placeholder: "Segundo ponto principal do conteúdo...",
       moduleId: "4",
     },
   },
@@ -148,7 +148,7 @@ export const SCRIPT_TEMPLATE: Block[] = [
     type: "scriptField",
     props: {
       label: "Parte 3",
-      placeholder: "Terceiro ponto principal do conteudo...",
+      placeholder: "Terceiro ponto principal do conteúdo...",
       moduleId: "4",
     },
   },
@@ -159,16 +159,16 @@ export const SCRIPT_TEMPLATE: Block[] = [
     props: {
       moduleId: "5-6",
       moduleNumber: "5-6",
-      moduleTitle: "A Saida Invisivel",
+      moduleTitle: "A Saída Invisível",
       microLearning:
-        "Nunca termine abruptamente. A saida invisivel faz o espectador sentir que o proximo passo e natural.",
+        "Nunca termine abruptamente. A saída invisível faz o espectador sentir que o próximo passo é natural.",
     },
   },
   {
     type: "scriptField",
     props: {
-      label: "Transicao",
-      placeholder: "Como voce faz a transicao para o final?",
+      label: "Transição",
+      placeholder: "Como você faz a transição para o final?",
       moduleId: "5-6",
     },
   },
@@ -176,15 +176,15 @@ export const SCRIPT_TEMPLATE: Block[] = [
     type: "scriptField",
     props: {
       label: "CTA Escolhido",
-      placeholder: "Qual e o call-to-action?",
+      placeholder: "Qual é o call-to-action?",
       moduleId: "5-6",
     },
   },
   {
     type: "scriptField",
     props: {
-      label: "Video Recomendado",
-      placeholder: "Qual video voce recomenda em seguida?",
+      label: "Vídeo Recomendado",
+      placeholder: "Qual vídeo você recomenda em seguida?",
       moduleId: "5-6",
     },
   },
