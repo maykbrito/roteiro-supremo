@@ -5,14 +5,14 @@ interface ScriptCardProps {
   script: {
     _id: string;
     title: string;
-    updatedAt: number;
+    updatedAt?: number;
   };
   onClick: () => void;
   onDelete: () => void;
 }
 
 export function ScriptCard({ script, onClick, onDelete }: ScriptCardProps) {
-  const timeAgo = getTimeAgo(script.updatedAt);
+  const timeAgo = script.updatedAt ? getTimeAgo(script.updatedAt) : "";
 
   return (
     <div
