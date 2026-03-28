@@ -1,54 +1,74 @@
-import { mutation, query } from "./_generated/server";
+// convex/scripts.ts
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 export const listScripts = query({
+  args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("scripts").withIndex("by_updatedAt").order("desc").collect();
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return [];
+
+    return await ctx.db
+      .query("scripts")
+      .withIndex("by_user_and_updated", (q) => q.eq("userId", userId))
+      .order("desc")
+      .take(50);
+  },
+});
+
+export const getScript = query({
+  args: { id: v.id("scripts") },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return null;
+
+    const script = await ctx.db.get(args.id);
+    if (!script || script.userId !== userId) return null;
+
+    return script;
+  },
+});
+
+export const createScript = mutation({
+  args: { title: v.string() },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    return await ctx.db.insert("scripts", {
+      userId,
+      title: args.title,
+      updatedAt: Date.now(),
+    });
+  },
+});
+
+export const updateScriptTitle = mutation({
+  args: { id: v.id("scripts"), title: v.string() },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    const script = await ctx.db.get(args.id);
+    if (!script || script.userId !== userId) throw new Error("Not authorized");
+
+    await ctx.db.patch(args.id, {
+      title: args.title,
+      updatedAt: Date.now(),
+    });
   },
 });
 
 export const deleteScript = mutation({
   args: { id: v.id("scripts") },
   handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    const script = await ctx.db.get(args.id);
+    if (!script || script.userId !== userId) throw new Error("Not authorized");
+
     await ctx.db.delete(args.id);
-  },
-});
-
-export const getScript = query({
-  args: { id: v.optional(v.id("scripts")) },
-  handler: async (ctx, args) => {
-    if (!args.id) return null;
-    return await ctx.db.get(args.id);
-  },
-});
-
-export const upsertScript = mutation({
-  args: {
-    id: v.optional(v.id("scripts")),
-    title: v.string(),
-    thumbIdea: v.string(),
-    objective: v.string(),
-    difficulties: v.string(),
-    discovery: v.string(),
-    objections: v.string(),
-    name: v.string(),
-    whoYouAre: v.string(),
-    whatYouDo: v.string(),
-    connectionStrategy: v.string(),
-    parts: v.array(v.string()),
-    transition: v.string(),
-    cta: v.array(v.string()),
-    recommendedVideo: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const { id, ...data } = args;
-    const now = Date.now();
-    
-    if (id) {
-      await ctx.db.patch(id, { ...data, updatedAt: now });
-      return id;
-    } else {
-      return await ctx.db.insert("scripts", { ...data, updatedAt: now });
-    }
   },
 });

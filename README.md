@@ -1,23 +1,49 @@
-# Roteiro Supremo
+# Roteiro Supremo v2
 
-App para criar roteiros de vídeo seguindo uma metodologia em 5 módulos: vitrine, abertura, apresentação, conteúdo e finalização. O conteúdo é salvo automaticamente no Convex enquanto você escreve.
+Construtor de roteiros para YouTube com editor de blocos e assistencia de IA.
 
-## Pré-requisitos
+## Funcionalidades
 
-- Node.js 18+
-- Conta no [Convex](https://convex.dev) (gratuita)
+- **Editor de blocos**: Edite seu roteiro diretamente em uma unica tela usando BlockNote.js
+- **Modulos colapsaveis**: Organize seu roteiro em modulos que podem ser expandidos/colapsados
+- **Micro learning**: Dicas educativas inline em cada modulo
+- **IA por campo**: Botao "Sugerir" gera conteudo contextual para cada campo
+- **Analise completa**: "Analisar com IA" avalia o roteiro inteiro com pontuacao e sugestoes
+- **Menu IA nativo**: Selecione texto para reescrever, resumir ou traduzir com IA
+- **Dashboard**: Gerencie multiplos roteiros com criacao, edicao e exclusao
+- **Auth**: Login com Google via Convex Auth
 
-## Como rodar
+## Tech Stack
 
-```bash
-# 1. Instale as dependências
-pnpm install
+- React 19 + Vite + Tailwind CSS 4
+- BlockNote.js (editor de blocos)
+- Convex (backend, auth, real-time sync)
+- Gemini 3 Flash Preview (IA)
 
-# 2. Inicie o app (sobe o Vite e o Convex juntos)
-pnpm dev
-```
+## Setup
 
-Na primeira vez, o Convex vai abrir o browser para login e configurar o projeto automaticamente.
+1. Clone e instale dependencias:
+   ```bash
+   pnpm install
+   ```
 
-Acesse `http://localhost:3456`.
+2. Configure o Convex:
+   ```bash
+   pnpm exec convex dev
+   ```
 
+3. Defina as variaveis de ambiente no Convex Dashboard:
+   - `AUTH_GOOGLE_ID` — Google OAuth client ID
+   - `AUTH_GOOGLE_SECRET` — Google OAuth client secret
+   - `CONVEX_SITE_URL` — URL do HTTP Actions (ex: `https://<deployment>.convex.site`)
+   - `GEMINI_API_KEY` — Chave da API Gemini
+
+4. Crie `.env.local` com:
+   ```
+   VITE_CONVEX_URL=<sua-url-convex>
+   ```
+
+5. Inicie o dev server:
+   ```bash
+   pnpm dev
+   ```

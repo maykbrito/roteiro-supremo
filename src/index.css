@@ -1,13 +1,39 @@
+/* src/index.css */
 @import "tailwindcss";
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Playfair Display", serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+:root {
+  --accent: #84cc16;
 }
 
-@layer base {
-  body {
-    @apply font-sans;
-  }
+body {
+  @apply bg-zinc-950 text-zinc-100 antialiased;
+}
+
+/* BlockNote dark theme overrides */
+.bn-container[data-color-scheme="dark"] {
+  --bn-colors-editor-background: #09090b;
+  --bn-colors-editor-text: #f4f4f5;
+  --bn-colors-menu-background: #18181b;
+  --bn-colors-menu-text: #f4f4f5;
+  --bn-colors-hovered-background: #27272a;
+  --bn-colors-selected-background: color-mix(in srgb, var(--accent) 20%, transparent);
+  --bn-colors-tooltip-background: #27272a;
+  --bn-colors-tooltip-text: #f4f4f5;
+}
+
+/* Remove default block margins for tighter layout */
+.bn-container .bn-block-outer {
+  margin: 0;
+}
+
+/* Module header styling */
+.module-header {
+  border-bottom: 1px solid #27272a;
+  margin-top: 1rem;
+}
+
+/* Script field placeholder styling */
+.script-field .inline-content [data-placeholder]::before {
+  color: #52525b;
+  font-style: italic;
 }
