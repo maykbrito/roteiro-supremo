@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
-    "dev:convex": "npx convex dev"
+    "dev:convex": "npx convex dev",
+    "build:prod": "npx convex deploy --cmd 'npm run build'"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^2.0.37",
