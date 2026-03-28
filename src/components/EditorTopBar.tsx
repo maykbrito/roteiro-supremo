@@ -27,10 +27,12 @@ export function EditorTopBar({
   const [title, setTitle] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const titleTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isFocused = useRef(false);
 
-  // Sync title from server
+  // Sync title from server only when user is NOT editing
   useEffect(() => {
-    if (script?.title) {
+    if (script?.title != null && !isFocused.current) {
       setTitle(script.title);
     }
   }, [script?.title]);
@@ -87,9 +89,16 @@ export function EditorTopBar({
         </button>
 
         <input
+          ref={inputRef}
           type="text"
           value={title}
           onChange={(e) => handleTitleChange(e.target.value)}
+          onFocus={() => { isFocused.current = true; }}
+          onBlur={() => {
+            isFocused.current = false;
+            // Sync server value on blur in case it changed
+            if (script?.title != null) setTitle(script.title);
+          }}
           placeholder="Sem titulo"
           className="flex-1 bg-transparent text-zinc-100 font-medium text-base outline-none placeholder-zinc-600 border-none"
         />
