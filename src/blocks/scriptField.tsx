@@ -4,11 +4,11 @@ import { useState, useCallback } from "react";
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Sparkles, Check, X, Loader2 } from "lucide-react";
-import type { InlineContent } from "@blocknote/core";
 
 type SuggestionState = {
   status: "idle" | "loading" | "reviewing";
-  originalContent: InlineContent[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  originalContent: any[];
 };
 
 export const scriptField = createReactBlockSpec(
@@ -28,13 +28,15 @@ export const scriptField = createReactBlockSpec(
         status: "idle",
         originalContent: [],
       });
-      const suggestAction = useAction(api.ai.suggestFieldContent);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const suggestAction = useAction((api as any).ai.suggestFieldContent);
 
       const handleSuggest = useCallback(async () => {
         if (suggestion.status === "loading") return;
 
         // Save current content
-        const currentContent = props.block.content as InlineContent[];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const currentContent = props.block.content as any[];
         setSuggestion({
           status: "loading",
           originalContent: [...currentContent],
@@ -49,11 +51,11 @@ export const scriptField = createReactBlockSpec(
 
           for (const block of allBlocks) {
             const blockProps = block.props as Record<string, unknown>;
-            if (block.type === "moduleHeader" && blockProps.moduleId === moduleId) {
+            if ((block.type as string) === "moduleHeader" && blockProps.moduleId === moduleId) {
               moduleTitle = blockProps.moduleTitle as string;
             }
             if (block.type === "scriptField" && block.id !== props.block.id) {
-              const content = (block.content as InlineContent[])
+              const content = (block.content as any[])
                 .map((c: any) => c.text ?? "")
                 .join("");
               if (content.trim()) {
@@ -68,7 +70,7 @@ export const scriptField = createReactBlockSpec(
               block.type === "scriptField" &&
               (blockProps.label as string) === "Titulo do Video"
             ) {
-              scriptTitle = (block.content as InlineContent[])
+              scriptTitle = (block.content as any[])
                 .map((c: any) => c.text ?? "")
                 .join("");
             }
