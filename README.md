@@ -11,12 +11,13 @@ App para criar roteiros de vídeo seguindo uma metodologia em 5 módulos: vitrin
 
 ```bash
 # 1. Instale as dependências
-npm install
+pnpm install
 
 # 2. Inicie o app (sobe o Vite e o Convex juntos)
-npm run dev
+pnpm dev
 ```
 
 Na primeira vez, o Convex vai abrir o browser para login e configurar o projeto automaticamente.
 
 Acesse `http://localhost:3456`.
+
