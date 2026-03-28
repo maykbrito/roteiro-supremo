@@ -1,10 +1,13 @@
 // src/components/Editor.tsx
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useBlockNoteSync } from "@convex-dev/prosemirror-sync/blocknote";
+import { useAuthToken } from "@convex-dev/auth/react";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { BlockNoteEditor } from "@blocknote/core";
+import { AIExtension, AIMenu, ClientSideTransport } from "@blocknote/xl-ai";
 import { AnimatePresence } from "motion/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -19,11 +22,36 @@ interface EditorProps {
 }
 
 export function Editor({ scriptId }: EditorProps) {
+  const token = useAuthToken();
+
+  const convexSiteUrl = (import.meta.env.VITE_CONVEX_URL as string).replace(
+    ".cloud",
+    ".site",
+  );
+
+  const aiModel = useMemo(
+    () =>
+      createOpenAICompatible({
+        name: "convex-gemini",
+        baseURL: `${convexSiteUrl}/api/ai/blocknote`,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      })("gemini-3-flash-preview"),
+    [convexSiteUrl, token], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
+  const aiExtension = useMemo(
+    () =>
+      AIExtension({
+        transport: new ClientSideTransport({ model: aiModel }),
+      }),
+    [aiModel],
+  );
+
   const sync = useBlockNoteSync<BlockNoteEditor>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (api as any).prosemirrorSync,
     scriptId as string,
-    { editorOptions: { schema } },
+    { editorOptions: { schema, extensions: [aiExtension] } },
   );
 
   const [analysis, setAnalysis] = useState<any>(null);
@@ -115,7 +143,9 @@ export function Editor({ scriptId }: EditorProps) {
         onAnalysisComplete={setAnalysis}
       />
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <BlockNoteView editor={sync.editor} theme="dark" />
+        <BlockNoteView editor={sync.editor} theme="dark">
+          <AIMenu />
+        </BlockNoteView>
       </div>
       <AnimatePresence>
         {analysis && (
