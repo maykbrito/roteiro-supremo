@@ -32,18 +32,26 @@ Construtor de roteiros para YouTube com editor de blocos e assistencia de IA.
    pnpm exec convex dev
    ```
 
-3. Defina as variaveis de ambiente no Convex Dashboard:
+3. Configure o Convex Auth (gera `JWT_PRIVATE_KEY` e `JWKS` automaticamente):
+   ```bash
+   pnpm exec @convex-dev/auth
+   ```
+
+4. Defina as variaveis de ambiente no Convex Dashboard:
    - `AUTH_GOOGLE_ID` — Google OAuth client ID
    - `AUTH_GOOGLE_SECRET` — Google OAuth client secret
-   - `CONVEX_SITE_URL` — URL do HTTP Actions (ex: `https://<deployment>.convex.site`)
+   - `AUTH_SECRET` — Segredo para assinar cookies/tokens (gere com `openssl rand -base64 32`)
+   - `SITE_URL` — URL do frontend (ex: `http://localhost:3456` em dev)
    - `GEMINI_API_KEY` — Chave da API Gemini
 
-4. Crie `.env.local` com:
+   > `CONVEX_SITE_URL` e `JWT_PRIVATE_KEY`/`JWKS` sao configurados automaticamente pelo Convex e pelo passo 3.
+
+5. Crie `.env.local` com:
    ```
    VITE_CONVEX_URL=<sua-url-convex>
    ```
 
-5. Inicie o dev server:
+6. Inicie o dev server:
    ```bash
    pnpm dev
    ```
