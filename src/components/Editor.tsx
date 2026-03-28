@@ -39,6 +39,13 @@ export function Editor({ scriptId }: EditorProps) {
     sync.create(pmDoc);
   }, [sync]);
 
+  // Auto-create prosemirror document when script exists but document doesn't
+  useEffect(() => {
+    if (!sync.isLoading && !sync.editor && "create" in sync) {
+      handleCreate();
+    }
+  }, [sync.isLoading, sync.editor, sync, handleCreate]);
+
   // Apply collapse CSS when editor blocks change
   useEffect(() => {
     if (!sync.editor) return;
@@ -89,15 +96,8 @@ export function Editor({ scriptId }: EditorProps) {
 
   if (!sync.editor) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-zinc-950 gap-4">
-        <p className="text-zinc-400">Documento não encontrado.</p>
-        <button
-          type="button"
-          onClick={handleCreate}
-          className="px-4 py-2 bg-lime-500 text-zinc-950 font-semibold rounded-lg hover:bg-lime-400 transition-colors"
-        >
-          Criar roteiro
-        </button>
+      <div className="flex items-center justify-center h-screen bg-zinc-950">
+        <Loader2 className="animate-spin text-lime-400" size={32} />
       </div>
     );
   }
